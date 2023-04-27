@@ -19,11 +19,11 @@ t = np.arange(t_start, t_end, dt)
 k = -3.5
 g = -9.81
 s = control.tf('s')
-plant = k*g / s ** 2  # short way
+plant = 179.91 / s ** 2  # short way
 #plant_norm = plant / 200
 
 # First Order Approximator (Controller)
-controller = ((3/34.5)*s + (1/34.5)) / (s+3)
+controller = ((3/179.91)*s + (1/179.91)) / (s+3)
 #controller_norm = controller / 10
 
 #look at bode plot of L

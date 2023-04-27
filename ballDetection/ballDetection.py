@@ -7,22 +7,23 @@ import imutils
 import time
 import os
 
-#ser = serial.Serial('COM7', baudrate=9600)
 #define color boundaries of ball we want to try. Currently set to orange.
 orangeLower = (13, 100, 100)
 orangeUpper = (33, 255, 255)
 
-def ballDetectWithDimensions(vs, baseX, baseY):
+#orangeLower = (14, 20, 180)
+#orangeUpper = (34, 255, 255)
+
+def ballDetectWithDimensions(vs, dimensions):
 	displacementX = 0
 	displacementY = 0
 	# grab the current frame
-	frame = vs.read()
+	_, frame = vs.read()
 	if frame is None:
 		return
 
 	# resize the frame, blur it, and convert it to the HSV
 	# color space
-	frame = imutils.resize(frame, width=600)
 	blurred = cv2.GaussianBlur(frame, (11, 11), 0)
 	hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
@@ -50,12 +51,12 @@ def ballDetectWithDimensions(vs, baseX, baseY):
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
 		if radius > 5:
+			#if center[0] <= dimensions['xLow'] and center[0] >= dimensions['xHigh'] and center[1] <= dimensions['yLow'] and center[1] >= dimensions['yHigh']:
+			displacementX = center[0] - dimensions['xCenter']
+			displacementY = center[1] - dimensions['yCenter']
 			# draw the centroid on frame
 			cv2.circle(frame, center, 5, (0, 0, 255), -1)
-			displacementX = center[0] - baseX
-			displacementY = center[1] - baseY
 	return frame, displacementX, displacementY
-
 #Helpful for Testing, Deprecated in current format.
 def ballDetectWithContrail(cameraID):
 	# construct the argument parse and parse the arguments
